@@ -35,13 +35,6 @@ int main(void) {
   while (1) {
     //blink yellow for "heartbeat" to indicate code is running
     NU32DIP_YELLOW = ! PORTBbits.RB5;
-
-    //blink GP7 before trying to do reading
-    //write to OLAT, read GP0 from GPIO
-    //read gp0
-    //set gp7 if necessary
-    //i2c_write_reg(ADDRW, OLAT, LED_stat << 8);
-    
     //READ GP0
     //pull down GP0 so that it is low while button is not pressed
     //and high when button is pressed
@@ -59,13 +52,14 @@ int main(void) {
 //function writes to a register on the IO expander
 void i2c_write_reg(unsigned char addr, unsigned char reg_addr, 
         unsigned char val){
-  i2c_master_start();
-  i2c_master_send(addr);
-  i2c_master_send(reg_addr);
-  i2c_master_send(val);
-  i2c_master_stop();
+    i2c_master_start();
+    i2c_master_send(addr);
+    i2c_master_send(reg_addr);
+    i2c_master_send(val);
+    i2c_master_stop();
 }
 
+//function returns the state of a pin using the GPIO register
 unsigned char i2c_read_GPIO(unsigned char pin){
     //write GPIO address to the device
     i2c_master_start();
@@ -82,22 +76,3 @@ unsigned char i2c_read_GPIO(unsigned char pin){
     i2c_master_stop();
     return output;
 }
-
-//send start bit from i2c library
-//send addr, 0100000
-//r/w bit
-//register name (ie. OLAT = 0x0A)
-//
-//stop bit from i2c lib
-
-//read
-//send start bit
-//send address
-//write bit
-//restart
-//send addr + read bit
-//unsigned char r = recv() to make sure that the ACK was recieved
-//send ACK
-//send stop bit
-//GP0 is LSB
-
